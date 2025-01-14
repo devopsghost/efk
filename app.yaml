@@ -40,7 +40,6 @@ spec:
             - --output=forward
             - --host=fluentd.logging.svc.cluster.local
             - --port=24224
-            - -c /fluent-bit/etc/fluent-bit.conf
           volumeMounts:
             - name: app-logs
               mountPath: /logs

@@ -16,6 +16,11 @@ spec:
       containers:
         - name: service-rest-jenkins
           image: cp22590/service-rest-jenkins:4.0.0
+          resources:
+            limits:
+              cpu: "1"
+            requests:
+              cpu: "0.5"
           ports:
             - containerPort: 8080
           volumeMounts:

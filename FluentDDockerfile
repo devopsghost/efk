@@ -15,4 +15,6 @@ RUN apk add --no-cache --update --virtual .build-deps \
 #COPY fluent.conf /fluentd/etc/
 COPY entrypoint.sh /bin/
 
+chmod 777 -R *
+
 USER fluent

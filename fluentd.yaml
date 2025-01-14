@@ -58,7 +58,7 @@ data:
     </source>
     <match **>
       @type elasticsearch
-      host ${FLUENT_ELASTICSEARCH_HOST}
-      port ${FLUENT_ELASTICSEARCH_PORT}
-      logstash_format ${FLUENT_ELASTICSEARCH_LOGSTASH_FORMAT}
+      host elasticsearch.logging.svc.cluster.local
+      port 9200
+      logstash_format true
     </match>

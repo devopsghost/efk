@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-rest-jenkins
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-rest-jenkins
+  template:
+    metadata:
+      labels:
+        app: service-rest-jenkins
+    spec:
+      containers:
+        - name: service-rest-jenkins
+          image: cp22590/service-rest-jenkins:4.0.0
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: app-logs
+              mountPath: /logs
+        - name: fluent-bit
+          image: fluent/fluent-bit:latest
+          args:
+            - --input=tail
+            - --path=/logs/*.log
+            - --parser=multi_line
+            - --tag=service-rest-jenkins
+            - --output=forward
+            - --host=fluentd.logging.svc.cluster.local
+            - --port=24224
+          volumeMounts:
+            - name: app-logs
+              mountPath: /logs
+      volumes:
+        - name: app-logs
+          emptyDir: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: default
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush        5
+        Log_Level    info
+
+    [INPUT]
+        Name          tail
+        Path          /logs/*.log
+        Parser        multi_line
+        Tag           service-rest-jenkins
+
+    [PARSER]
+        Name          multi_line
+        Format        regex
+        Regex_1       ^\d{4}-\d{2}-\d{2}.*$  # Match timestamp for new log entries
+        Regex_2       ^\s+.*$                # Match lines starting with whitespace (continuation)
+        Multiline     On
+
+    [OUTPUT]
+        Name          forward
+        Host          fluentd.logging.svc.cluster.local
+        Port          24224

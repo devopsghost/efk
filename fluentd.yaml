@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: fluentd
-          image: fluent/fluentd:v1.16
+          image: cp22590/fluentd:v1.16
           resources:
             limits:
               cpu: "1"

@@ -75,6 +75,3 @@ spec:
     - protocol: TCP
       port: 24224
       targetPort: 24224
-    - protocol: UDP
-      port: 24224
-      targetPort: 24224

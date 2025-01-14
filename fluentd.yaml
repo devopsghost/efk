@@ -37,12 +37,12 @@ spec:
             - containerPort: 24224
             - containerPort: 24224
               protocol: UDP
-          volumes:
-            - name: config-volume
-              configMap:
-                name: fluentd-config
-            - name: buffer-volume
-              emptyDir: {}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: fluentd-config
+        - name: buffer-volume
+          emptyDir: {}
 
 ---
 apiVersion: v1

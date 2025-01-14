@@ -28,6 +28,10 @@ spec:
               mountPath: /logs
         - name: fluent-bit
           image: fluent/fluent-bit:latest
+          resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
           args:
             - --input=tail
             - --path=/logs/*.log
@@ -36,12 +40,19 @@ spec:
             - --output=forward
             - --host=fluentd.logging.svc.cluster.local
             - --port=24224
+            - -c /fluent-bit/etc/fluent-bit.conf
           volumeMounts:
             - name: app-logs
               mountPath: /logs
+            - name: fluent-bit-config
+              mountPath: /fluent-bit/etc
+              readOnly: true
       volumes:
         - name: app-logs
           emptyDir: {}
+        - name: fluent-bit-config
+          configMap:
+            name: fluent-bit-config
 ---
 apiVersion: v1
 kind: ConfigMap
